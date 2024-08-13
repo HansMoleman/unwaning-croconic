@@ -20,6 +20,11 @@ from charencoding import *
 
 
 
+## isBitString(str) : bool
+#
+# Determines if given string is a bit string or not, and returns
+# True if it is, False if it is not.
+##
 def isBitString(a_string):
 	is_only_bits = True
 	for i in range(len(a_string)):
@@ -27,6 +32,14 @@ def isBitString(a_string):
 			is_only_bits = False
 
 	return is_only_bits
+
+
+##
+#
+#
+##
+def hashingOperation():
+	pass
 
 
 
@@ -141,23 +154,5 @@ def main():
 main()
 
 
-'''
-teststr = "k!$7P2F-6Kj1,D292[{3YQ;9>R32*!uP4qwgMK^w"
-testkey = "password1"
-bstr = stringToBinary(teststr)
-bkey = stringToBinary(testkey)
 
-hashed = xorHash(bstr, bkey)
-saveHash("export.bin", hashed)
-print("export.bin created.")
-
-elif sys.argv[1] == "hash-from-file":
-	testkey = "password"
-	bkey = stringToBinary(testkey)
-	hashedstr = loadHash("export.bin")
-	print("export.bin loaded.")
-
-	hashed = xorHash(hashedstr, bkey)
-	teststr = binaryToString(hashed)
-	print(teststr)
-'''
+# teststr = "k!$7P2F-6Kj1,D292[{3YQ;9>R32*!uP4qwgMK^w"
