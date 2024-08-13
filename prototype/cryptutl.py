@@ -110,7 +110,12 @@ def main():
 
 				data_out = xorHash(data_in, key_in)
 				if path_out != "":
-					saveHash(path_out, data_out)
+					if path_out[-3:] == "bin":
+						saveHash(path_out, data_out)
+					else:
+						fobj = open(path_out, 'w')
+						fobj.write(binaryToString(data_out))
+						fobj.close()
 					print(f"hash data saved to {path_out}.")
 				else:
 					if type_in == "bin":
@@ -137,7 +142,7 @@ main()
 
 
 '''
-teststr = "k!.7P2F-6Kj1,D2'2[{3YQ;9>R3'*!uP4qwgMK^w"
+teststr = "k!$7P2F-6Kj1,D292[{3YQ;9>R32*!uP4qwgMK^w"
 testkey = "password1"
 bstr = stringToBinary(teststr)
 bkey = stringToBinary(testkey)
