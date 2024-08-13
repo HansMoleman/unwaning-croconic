@@ -1,8 +1,8 @@
 #!/usr/bin/python3
 
-### crypu.py ##
+### cryptutl.py ##
 #
-# RUN:	python3 crypu.py
+# RUN:	python3 cryptutl.py
 # DPN:	hashing.py, charencoding.py
 #
 # This is the main module for the 'unwaning-croconic' project prototype.
