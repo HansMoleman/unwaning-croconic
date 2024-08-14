@@ -34,9 +34,10 @@ def isBitString(a_string):
 	return is_only_bits
 
 
-##
+## doHashingOperation(dict) : None
 #
-#
+# Uses the given argument dict to carry out a hashing operation as
+# specified by the user.
 ##
 def doHashingOperation(hash_args):
 	source_bin = ""
@@ -85,9 +86,13 @@ def doHashingOperation(hash_args):
 			print(hashed_bin)
 
 
-##
+## parseHashCommand(int) : dict
 #
-#
+# Determines what combination of arguments has been passed and then
+# stores the argument values, along with their associated types,
+# for the 'hash' command. Returns a dict containing the arg names as keys
+# to their own dicts holding the value and type; only args present will be
+# set and the others left blank.
 ##
 def parseHashCommand(argc):
 
