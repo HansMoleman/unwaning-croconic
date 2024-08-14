@@ -60,9 +60,10 @@ def binaryToString(binary_string):
 # Converts (decodes) a binary (bit) string to its corresponding
 # character, then returns that character.
 ##
-def bytesToChar(char_bytes):
-	vascii = int(char_bytes, 2)
-	return chr(vascii)
+def bytesToChar(char_bits):
+	cbytes = bytes(char_bits, "UTF-8")
+	vchar  = cbytes.decode()
+	return vchar
 
 
 ## charToBytes(chr) : str
