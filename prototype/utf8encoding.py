@@ -61,8 +61,32 @@ def binaryToString(binary_string):
 # character, then returns that character.
 ##
 def bytesToChar(char_bits):
-	utf8 = int(char_bits, 2)
-	vchar  = chr(utf8)
+	nbytes = len(char_bits) / 8
+	vchar = ''
+
+	if nbytes <= 1:
+		asc = int(char_bits, 2)
+		vchar = chr(asc)
+	
+	else:
+		chbits = ""
+
+		if nbytes == 2:
+			chbits += char_bits[3:8]
+			chbits += char_bits[10:]
+		elif nbytes == 3:
+			chbits += char_bits[4:8]
+			chbits += char_bits[10:16]
+			chbits += char_bits[18:]
+		else:
+			chbits += char_bits[5:8]
+			chbits += char_bits[10:16]
+			chbits += char_bits[18:24]
+			chbits += char_bits[26:]
+
+		uni = int(chbits, 2)
+		vchar = chr(uni)
+
 	return vchar
 
 
