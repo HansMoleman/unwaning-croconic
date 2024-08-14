@@ -17,22 +17,42 @@
 # character string, and returns the character string.
 ##
 def binaryToString(binary_string):
-	vstr = ""
-	chunks = []
+	vstring = ""
+	characters = []
 
-	curr_chunk = ""
-	for i in range(len(binary_string)):
-		curr_chunk += binary_string[i]
+	sequence = ""
+	i = 0
+	while(i < len(binary_string)):
+		if binary_string[i] == '0':
+			# single byte
+			for j in range(i, (i + 8)):
+				sequence += binary_string[j]
+			characters.append(sequence)
 
-		if len(curr_chunk) == 32:
-			chunks.append(curr_chunk)
-			curr_chunk = ""
+			sequence = ""
+			i += 8
 
-	for chunk in chunks:
-		vchar = bytesToChar(chunk)
-		vstr += vchar
+		elif binary_string[i] == '1':
+			nbytes = 1
 
-	return vstr
+			j = 1
+			while(binary_string[i + j] == '1'):
+				nbytes += 1
+				j += 1
+
+			max_i = (nbytes * 8) + i
+			for k in range(i, max_i):
+				sequence += binary_string[k]
+			characters.append(sequence)
+			
+			sequence = ""
+			i += (nbytes * 8)
+
+	# assemble characters to build string
+	for char in characters:
+		vstring += bytesToChar(char)
+
+	return vstring
 
 
 ## bytesToChar(str) : str
