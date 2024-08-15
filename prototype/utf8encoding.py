@@ -100,13 +100,11 @@ def charToBytes(a_character):
 	cbytes = bytes(a_character, "UTF-8")
 	bitstr = bin(int(cbytes.hex(), 16))[2:]
 
-	'''
-	if 8 < len(bitstr) and len(bitstr) < 16:
-		padstr = "11"
-		while((len(padstr) + len(bitstr)) < 16):
+	if len(bitstr) < 8:
+		padstr = ""
+		while((len(padstr) + len(bitstr)) < 8):
 			padstr += '0'
 		bitstr = padstr + bitstr
-	'''
 
 	return bitstr
 
