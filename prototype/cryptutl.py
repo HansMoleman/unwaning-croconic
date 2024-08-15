@@ -196,6 +196,22 @@ def parseHashCommand(argc):
 			return None
 
 
+## loadTextString(str) : str
+#
+# Loads a plain-text string from target text file and returns it.
+##
+def loadTextString(filepath):
+	pass
+
+
+## saveTextString(str, str) : None
+#
+# Saves a plain-text string to target text file.
+##
+def saveTextString(filepath, text_string):
+	pass
+
+
 
 def main():
 	# unpack args
