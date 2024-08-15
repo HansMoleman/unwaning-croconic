@@ -3,7 +3,7 @@
 ### cryptutl.py ##
 #
 # RUN:	python3 cryptutl.py
-# DPN:	hashing.py, charencoding.py
+# DPN:	hashing.py, utf8encoding.py
 #
 # This is the main module for the 'unwaning-croconic' project prototype.
 # The module is responsible for parsing user input and managing the rest of
@@ -16,7 +16,7 @@
 
 import sys
 from hashing import *
-from charencoding import *
+from utf8encoding import *
 
 
 
