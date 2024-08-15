@@ -198,18 +198,36 @@ def parseHashCommand(argc):
 
 ## loadTextString(str) : str
 #
-# Loads a plain-text string from target text file and returns it.
+# Loads a plain-text string from target text file and returns it. If the
+# target file cannot be accessed, method signals system to exit.
 ##
 def loadTextString(filepath):
-	pass
+	
+	try:
+		fobj = open(filepath, 'r')
+		tstr = fobj.read()
+		fobj.close()
+		return tstr
+
+	except:
+		print("ERROR: could not access/read from target file!")
+		exit(0)
 
 
 ## saveTextString(str, str) : None
 #
-# Saves a plain-text string to target text file.
+# Saves a plain-text string to target text file. If the target file
+# cannot be accessed, method signals system to exit.
 ##
 def saveTextString(filepath, text_string):
-	pass
+	try:
+		fobj = open(filepath, 'w')
+		fobj.write(text_string)
+		fobj.close()
+
+	except:
+		print("ERROR: could not access/write to target file!")
+		exit(0)
 
 
 
@@ -228,7 +246,10 @@ def main():
 		print("ERROR: no commands received; please try again with a recognized command (use command 'help' to see commands).")
 
 
-main()
+if __name__ == "__main__":
+	main()
+else:
+	print("cryptutl v2024.08.15 (prototype) module loaded.")
 
 
 
