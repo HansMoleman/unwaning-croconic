@@ -1,8 +1,9 @@
 
-### charencoding.py ##
+### utf8encoding.py ##
 #
 # This module provides the ability to convert (encode/decode) character
-# strings to bit strings, and bit strings to character strings.
+# strings to bit strings, and bit strings to character strings, following
+# the UTF-8 encoding standard.
 #
 # ---
 #  R.C.H. (c) August 13, 2024
