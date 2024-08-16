@@ -46,13 +46,11 @@ def doHashingOperation(hash_args):
 
 	if hash_args["data_in"]["value"] == "":
 			if hash_args["path_in"]["type"] == "txt":
-				fobj = open(hash_args["path_in"]["value"], 'r')
-				txt_in = fobj.read()
-				fobj.close()
+				txt_in = loadTextString(hash_args["path_in"]["value"])
 
 				hash_args["data_in"]["value"] = txt_in
 				hash_args["data_in"]["type"] = "txt"
-				hash_args = stringToBinary(txt_in)
+				source_bin = stringToBinary(txt_in)
 
 			elif hash_args["path_in"]["type"] == "bin":
 				hash_args["data_in"]["value"] = loadHash(hash_args["path_in"]["value"])
@@ -67,6 +65,7 @@ def doHashingOperation(hash_args):
 		else:
 			source_bin = hash_args["data_in"]["value"]
 
+	#print(hash_args)
 	key_bin = stringToBinary(hash_args["ukey_in"]["value"])
 
 	hashed_bin = xorHash(source_bin, key_bin)
@@ -74,11 +73,11 @@ def doHashingOperation(hash_args):
 		if hash_args["path_ot"]["type"] == "bin":
 			saveHash(hash_args["path_ot"]["value"], hashed_bin)
 		else:
-			fobj = open(hash_args["path_ot"]["value"], 'w')
-			fobj.write(binaryToString(hashed_bin))
-			fobj.close()
+			saveTextString(hash_args["path_ot"]["value"], binaryToString(hashed_bin))
+
 		otpath = hash_args["path_ot"]["value"]
 		print(f"hash data saved to {otpath}.")
+	
 	else:
 		if hash_args["data_in"]["type"] == "bin":
 			print(binaryToString(hashed_bin))
