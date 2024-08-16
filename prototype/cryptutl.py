@@ -65,11 +65,16 @@ def doHashingOperation(hash_args):
 		else:
 			source_bin = hash_args["data_in"]["value"]
 
-	#print(hash_args)
 	key_bin = stringToBinary(hash_args["ukey_in"]["value"])
 
 	hashed_bin = xorHash(source_bin, key_bin)
-	if hash_args["path_ot"]["value"] != "":
+	if hash_args["data_ot"]["type"] != "":
+		if hash_args["data_ot"]["type"] == "bin":
+			print(hashed_bin)
+		else:
+			print(binaryToString(hashed_bin))
+
+	elif hash_args["path_ot"]["value"] != "":
 		if hash_args["path_ot"]["type"] == "bin":
 			saveHash(hash_args["path_ot"]["value"], hashed_bin)
 		else:
@@ -112,8 +117,13 @@ def parseHashCommand(argc):
 			"path_ot": {
 				"value": "",
 				"type": ""
+			},
+			"data_ot": {
+				"value": "",
+				"type": ""
 			}
 		}
+		errors = 0
 
 		if argc == 4:
 			# no options passed (input data + key only)
@@ -128,8 +138,9 @@ def parseHashCommand(argc):
 			parse_dict["ukey_in"]["type"] = "txt"
 
 		elif argc == 5:
-			# file input option passed
+			# either file input or format output passed
 			if sys.argv[2] == "-f":
+				# file input option passed
 				parse_dict["path_in"]["value"] = sys.argv[3]
 				if sys.argv[3][-3:] == "bin":
 					parse_dict["path_in"]["type"] = "bin"
@@ -137,32 +148,77 @@ def parseHashCommand(argc):
 					parse_dict["path_in"]["type"] = "txt"
 				parse_dict["ukey_in"]["value"] = sys.argv[4]
 				parse_dict["ukey_in"]["type"] = "txt"
+
+			elif (sys.argv[4] == '-b') or (sys.argv[4] == '-t'):
+				# format for output as string specified
+				raw_data = sys.argv[2]
+				if isBitString(raw_data):
+					parse_dict["data_in"]["value"] = raw_data
+					parse_dict["data_in"]["type"] = "bin"
+				else:
+					parse_dict["data_in"]["value"] = raw_data
+					parse_dict["data_in"]["type"] = "txt"
+				parse_dict["ukey_in"]["value"] = sys.argv[3]
+				parse_dict["ukey_in"]["type"] = "txt"
+
+				if sys.argv[4] == '-b':
+					parse_dict["data_ot"]["type"] = "bin"
+				else:
+					parse_dict["data_ot"]["type"] = "txt"
+
 			else:
 				print("ERROR: weirdness...")
+				errors += 1
 
 		elif argc == 6:
-			# file output option passed
-			raw_data = sys.argv[2]
-			if isBitString(raw_data):
-				parse_dict["data_in"]["value"] = raw_data
-				parse_dict["data_in"]["type"] = "bin"
-			else:
-				parse_dict["data_in"]["value"] = raw_data
-				parse_dict["data_in"]["type"] = "txt"
-			parse_dict["ukey_in"]["value"] = sys.argv[3]
-			parse_dict["ukey_in"]["type"] = "txt"
-
-			if sys.argv[4] == "-f":
-				parse_dict["path_ot"]["value"] = sys.argv[5]
-				if sys.argv[5][-3:] == "bin":
-					parse_dict["path_ot"]["type"] = "bin"
+			# file output or file input + output format option passed
+			if sys.argv[2] == "-f":
+				# file input + output format options passed
+				parse_dict["path_in"]["value"] = sys.argv[3]
+				if sys.argv[3][-3:] == "bin":
+					parse_dict["path_in"]["type"] = "bin"
+				elif sys.argv[3][-3:] == "txt":
+					parse_dict["path_in"]["type"] = "txt"
 				else:
-					parse_dict["path_ot"]["type"] = "txt"
+					print(f"ERROR: incompatible file type ({(sys.argv[3][-3:])}) for file input!")
+					errors += 1
+
+				parse_dict["ukey_in"]["value"] = sys.argv[4]
+				parse_dict["ukey_in"]["type"] = "txt"
+
+				if sys.argv[5] == "-b":
+					parse_dict["data_ot"]["type"] = "bin"
+				elif sys.argv[5] == "-t":
+					parse_dict["data_ot"]["type"] = "txt"
+				else:
+					print(f"ERROR: expected arg \'-b\' or \'-t\' but received \'{sys.argv[5]}\'.")
+					errors += 1
+
 			else:
-				print("ERROR: more weirdness")
+				# file output option passed
+				raw_data = sys.argv[2]
+				if isBitString(raw_data):
+					parse_dict["data_in"]["value"] = raw_data
+					parse_dict["data_in"]["type"] = "bin"
+				else:
+					parse_dict["data_in"]["value"] = raw_data
+					parse_dict["data_in"]["type"] = "txt"
+				parse_dict["ukey_in"]["value"] = sys.argv[3]
+				parse_dict["ukey_in"]["type"] = "txt"
+
+				if sys.argv[4] == "-f":
+					parse_dict["path_ot"]["value"] = sys.argv[5]
+					if sys.argv[5][-3:] == "bin":
+						parse_dict["path_ot"]["type"] = "bin"
+					else:
+						parse_dict["path_ot"]["type"] = "txt"
+				else:
+					print(f"ERROR: expected arg \'-f\' but received \'{sys.argv[4]}\'; please try again.")
+					errors += 1
+
 
 		elif argc == 7:
-			# file input and file output options passed
+			# file input and file output or file input and output format options passed
 			if sys.argv[2] == "-f":
 				parse_dict["path_in"]["value"] = sys.argv[3]
 				if sys.argv[3][-3:] == "bin":
@@ -179,20 +235,26 @@ def parseHashCommand(argc):
 					else:
 						parse_dict["path_ot"]["type"] = "txt"
 				else:
-					print("ERROR: inner weirdness")
+					print(f"ERROR: expected arg \'-f\' but received \'{sys.argv[5]}\'.")
+					errors += 1
 			else:
-				print("ERROR: outer weirdness")
-
-		return parse_dict
+				print(f"ERROR: expected arg \'-f\' but received \'{sys.argv[2]}\'.")
+				errors += 1
 
 	else:
 		if sys.argv[2] == "--help":
 			print("help message for 'hash' command...")
-			return None
+			errors += 1
 
 		else:
 			print(f"ERROR: command 'hash' expects a minimum of 2 arguments but {argc - 2} were given. Try argument '--help' with command for documentation.")
-			return None
+			errors += 1
+
+	if 0 < errors:
+		print("exiting!")
+		exit(0)
+	else:
+		return parse_dict
 
 
 ## loadTextString(str) : str
