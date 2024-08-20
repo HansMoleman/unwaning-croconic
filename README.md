@@ -1,6 +1,6 @@
 # Cryptography Utility<br>(codename "Unwaning Croconic")
 **Created:**&nbsp;&nbsp; August 13<sup>th</sup>, 2024  
-**Updated:**&nbsp; 08-20-2024 @ 5:58 PM
+**Updated:**&nbsp; 08-20-2024 @ 6:05 PM
 
 ---
 
@@ -61,7 +61,7 @@ This executable copy of the main script will now allow you to use just 'cryptutl
 
 3. Now, if we'll want to have access to the 'cryptutl' executable anywhere on our system, we'll need to place it somewhere on our operating system's path. However, due to the cryptutl script depending on all other files within the prototype directory, care must be taken to ensure the 'cryptutl' script still has access to its dependencies while also being on the path. The first approach is the recommended:  
 (a) Create a symbolic link of the 'cryptutl' script, using its permanent location amongst the 'prototype' directory, and storing the link on your path, as follows:  
-`sudo ln -s ~/Desktop/unwaning-croconic/prototype/cryptutl ~/.local/bin/cryptutl`  
+`ln -s ~/Desktop/unwaning-croconic/prototype/cryptutl ~/.local/bin/cryptutl`  
 assuming you placed (and plan to keep) the repo clone in your Desktop directory, and ~/.local/bin is on your path.  
 (b) Alternatively, you may place the entire prototype directory (including the 'cryptutl' script) on your path, using  
 `cp -r ~/Desktop/unwaning-croconic/prototype ~/.local/bin/prototype`  
