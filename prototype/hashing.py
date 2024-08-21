@@ -590,7 +590,19 @@ def modularAddition(bstr_x, bstr_y, bstr_z):
 
 
 def bitshiftLeft(bit_string, shift_amount):
-	pass
+	register = []
+	for i in range(len(bit_string)):
+		register.append(bit_string[i])
+
+	for i in range(shift_amount):
+		bitv = register.pop(0)
+		register.append(bitv)
+
+	shift_str = ""
+	for bit in register:
+		shift_str += bit
+
+	return shift_str
 
 
 def bitAnd(bits_x, bits_y):
