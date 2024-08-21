@@ -556,23 +556,39 @@ def messageLength(msg_bitstr):
 
 def fFunction(bstr_b, bstr_c, bstr_d):
 	# F(b, c, d) = (b & C) | ((!b) & d)
-	b_and_c = ""
-	not_b_and_d = ""
-	b_and_c_or_not_b_and_d = ""
+	b_and_c = bitAnd(bstr_b, bstr_c)
+	not_b = bitNot(bstr_b)
+	not_b_and_d = bitAnd(not_b, bstr_d)
+	b_and_c_or_not_b_and_d = bitOr(b_and_c, not_b_and_d)
+
+	return b_and_c_or_not_b_and_d
 
 
 def gFunction(bstr_b, bstr_c, bstr_d):
 	# G(b, c, d) = (b & d) | (c & (!d))
-	pass
+	not_d = bitNot(bstr_d)
+	c_and_not_d = bitAnd(bstr_c, not_d)
+	b_and_d = bitAnd(bstr_b, bstr_d)
+	g = bitOr(b_and_d, c_and_not_d)
+
+	return g
 
 
 def hFunction(bstr_b, bstr_c, bstr_d):
 	# H(b, c, d) = (b ^ c ^ d)
-	pass
+	b_xor_c = bitXOR(bstr_b, bstr_c)
+	h = bitXOR(b_xor_c, bstr_d)
+
+	return h
+
 
 def iFunction(bstr_b, bstr_c, bstr_d):
 	# I(b, c, d) = c ^ (b | (!d))
-	pass
+	not_d = bitNot(bstr_d)
+	b_or_not_d = bitOr(bstr_b)
+	i = bitXOR(bstr_c, b_or_not_d)
+	
+	return i
 
 
 def modularAddition(bstr_x, bstr_y, bstr_z):
