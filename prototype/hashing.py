@@ -80,6 +80,9 @@ def saveHash(filepath, bitstring):
 #
 # Computes the MD5 hash of the given input message (bitstring) and
 # returns the corresponding 128-bit hash.
+# Test Strings:
+#	"This is a sample string for testing the MD5 hash method." (l=448)
+#	"This is a sample string for testing MD5 hashing." (l=384)
 ##
 def md5Hash(bitstr_in):
 	block_size = 512
@@ -137,9 +140,28 @@ def md5Hash(bitstr_in):
 			chunks.append(chunk)
 
 	print(chunks)
+	message_chunk = chunks[0]	# only worry about single chunk case for now
+	# bin of l=384 test string:
+	# '010101000110100001101001011100110010000001101001011100110010000001100001001000000111001101100001011011010111000001101100011001010010000001110011011101000111001001101001011011100110011100100000011001100110111101110010001000000111010001100101011100110111010001101001011011100110011100100000010011010100010000110101001000000110100001100001011100110110100001101001011011100110011100101110'
 
 	# break message block down into 16 x 32-bit words
-	pass
+	message_words = []
+	word = ""
+	counter = 0
+
+	for i in range(len(message_chunk)):
+		if counter == 32:
+			message_words.append(word)
+			word = ""
+			counter = 0
+
+		word += message_chunk[i]
+		counter += 1
+	message_words.append(word)
+	
+	print(f"num words:  {len(message_words)}")
+	for mword in message_words:
+		print(mword)
 
 
 ## messageLength(str) : str
