@@ -593,6 +593,54 @@ def bitshiftLeft(bit_string, shift_amount):
 	pass
 
 
+def bitAnd(bits_x, bits_y):
+	andv = ""
+
+	for i in range(len(bits_x)):
+		if bits_x[i] == bits_y[i]:
+			andv += '1'
+		else:
+			andv += '0'
+
+	return andv
+
+
+def bitOr(bits_x, bits_y):
+	orv = ""
+
+	for i in range(len(bits_x)):
+		if bits_x[i] == '0' and bits_y[i] == '0':
+			orv += '0'
+		else:
+			orv += '1'
+
+	return orv
+
+
+def bitNot(bits_x):
+	notv = ""
+
+	for i in range(len(bits_x)):
+		if bits_x[i] == '0':
+			notv += '1'
+		else:
+			notv += '0'
+
+	return notv
+
+
+def bitXOR(bits_x, bits_y):
+	xorv = ""
+
+	for i in range(len(bits_x)):
+		if bits_x[i] == bits_y[i]:
+			xorv += '0'
+		else:
+			xorv += '1'
+
+	return xorv
+
+
 def hexToBinary(hex_string):
 	bits = bin(int(hex_string, 16))[2:]
 
