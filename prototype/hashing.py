@@ -91,7 +91,7 @@ def md5Hash(bitstr_in):
 	init_b = "10001001101010111100110111101111"
 	init_c = "11111110110111001011101010011000"
 	init_d = "01110110010101000011001000010000"
-	k_const = [
+	t_const = [
 		"11010111011010101010010001111000",
 		"11101000110001111011011101010110",
 		"00100100001000000111000011011011",
@@ -233,6 +233,309 @@ def md5Hash(bitstr_in):
 	for mword in message_words:
 		print(mword)
 
+	#--#  conduct rounds on single block
+	i = 0
+	a_curr = init_a
+	b_curr = init_b
+	c_curr = init_c
+	d_curr = init_d
+	x_words = []
+
+	# copy block i into x
+	for j in range(16):
+		x_words.append(message_words[(i * 16 + j)])
+
+	# round 1
+	round_1_ops = [
+		('a', 'b', 'c', 'd', 0, 7, 0),
+		('d', 'a', 'b', 'c', 1, 12, 1),
+		('c', 'd', 'a', 'b', 2, 17, 2),
+		('b', 'c', 'd', 'a', 3, 22, 3),
+		('a', 'b', 'c', 'd', 4, 7, 4),
+		('d', 'a', 'b', 'c', 5, 12, 5),
+		('c', 'd', 'a', 'b', 6, 17, 6),
+		('b', 'c', 'd', 'a', 7, 22, 7),
+		('a', 'b', 'c', 'd', 8, 7, 8),
+		('d', 'a', 'b', 'c', 9, 12, 9),
+		('c', 'd', 'a', 'b', 10, 17, 10),
+		('b', 'c', 'd', 'a', 11, 22, 11),
+		('a', 'b', 'c', 'd', 12, 7, 12),
+		('d', 'a', 'b', 'c', 13, 12, 13),
+		('c', 'd', 'a', 'b', 14, 17, 14),
+		('b', 'c', 'd', 'a', 15, 22, 15),
+	]
+
+	for op in round_1_operations:
+		a_bits = ""
+		b_bits = ""
+		c_bits = ""
+		d_bits = ""
+		xk_bits = x_words[op[4]]
+		shift = op[5]
+		ti_bits = t_const[op[6]]
+
+		if op[0] == 'a':
+			a_bits = a_curr
+		elif op[0] == 'b':
+			a_bits = b_curr
+		elif op[0] == 'c':
+			a_bits = c_curr
+		elif op[0] == 'd':
+			a_bits = d_curr
+
+		if op[1] == 'a':
+			b_bits = a_curr
+		elif op[1] == 'b':
+			b_bits = b_curr
+		elif op[1] == 'c':
+			b_bits = c_curr
+		elif op[1] == 'd':
+			b_bits = d_curr
+
+		if op[2] == 'a':
+			c_bits = a_curr
+		elif op[2] == 'b':
+			c_bits = b_curr
+		elif op[2] == 'c':
+			c_bits = c_curr
+		elif op[2] == 'd':
+			c_bits = d_curr
+
+		if op[3] == 'a':
+			d_bits = a_curr
+		elif op[3] == 'b':
+			d_bits = b_curr
+		elif op[3] == 'c':
+			d_bits = c_curr
+		elif op[3] == 'd':
+			d_bits = d_curr
+
+		new_val = firstRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift, ti_bits)
+
+		if op[0] == 'a':
+			a_curr = new_val
+		elif op[0] == 'b':
+			b_curr = new_val
+		elif op[0] == 'c':
+			c_curr = new_val
+		elif op[0] == 'd':
+			d_curr = new_val
+
+	# round 2
+	round_2_operations = [
+		(1, 5, 16),
+		(6, 9, 17),
+		(11, 14, 18),
+		(0, 20, 19),
+		(5, 5, 20),
+		(10, 9, 21),
+		(15, 14, 22),
+		(4, 20, 23),
+		(9, 5, 24),
+		(14, 9, 25),
+		(3, 14, 26),
+		(8, 20, 27),
+		(13, 5, 28),
+		(2, 9, 29),
+		(7, 14, 30),
+		(12, 20, 31),
+	]
+
+	op_num = 0
+	for op in round_2_operations:
+		a_bits = ""
+		b_bits = ""
+		c_bits = ""
+		d_bits = ""
+		xk_bits = x_words[op[0]]
+		shift = op[1]
+		ti_bits = t_const[op[2]]
+		dest = ""
+
+		if op_num in (0, 4, 8, 12):
+			a_bits = a_curr
+			b_bits = b_curr
+			c_bits = c_curr
+			d_bits = d_curr
+			dest = "a_curr"
+		elif op_num in (1, 5, 9, 13):
+			a_bits = d_curr
+			b_bits = a_curr
+			c_bits = b_curr
+			d_bits = c_curr
+			dest = "d_curr"
+		elif op_num in (2, 6, 10, 14):
+			a_bits = c_curr
+			b_bits = d_curr
+			c_bits = a_curr
+			d_bits = b_curr
+			dest = "c_curr"
+		else:
+			a_bits = b_curr
+			b_bits = c_curr
+			c_bits = d_curr
+			d_bits = a_curr
+			dest = "b_curr"
+
+		new_val = secondRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift, ti_bits)
+		if dest == "a_curr":
+			a_curr = new_val
+		elif dest == "b_curr":
+			b_curr = new_val
+		elif dest == "c_curr":
+			c_curr = new_val
+		else:
+			d_curr = new_val
+
+		op_num += 1
+
+	# round 3
+	round_3_operations = [
+		(5, 4, 32),
+		(8, 11, 33),
+		(11, 16, 34),
+		(14, 23, 35),
+		(1, 4, 36),
+		(4, 11, 37),
+		(7, 16, 38),
+		(10, 23, 39),
+		(13, 4, 40),
+		(0, 11, 41),
+		(3, 16, 42),
+		(6, 23, 43),
+		(9, 4, 44),
+		(12, 11, 45),
+		(15, 16, 46),
+		(2, 23, 47),
+	]
+
+	op_num = 0
+	for op in round_3_operations:
+		a_bits = ""
+		b_bits = ""
+		c_bits = ""
+		d_bits = ""
+		xk_bits = x_words[op[0]]
+		shift = op[1]
+		ti_bits = t_const[op[2]]
+		dest = ""
+
+		if op_num in (0, 4, 8, 12):
+			a_bits = a_curr
+			b_bits = b_curr
+			c_bits = c_curr
+			d_bits = d_curr
+			dest = "a_curr"
+		elif op_num in (1, 5, 9, 13):
+			a_bits = d_curr
+			b_bits = a_curr
+			c_bits = b_curr
+			d_bits = c_curr
+			dest = "d_curr"
+		elif op_num in (2, 6, 10, 14):
+			a_bits = c_curr
+			b_bits = d_curr
+			c_bits = a_curr
+			d_bits = b_curr
+			dest = "c_curr"
+		else:
+			a_bits = b_curr
+			b_bits = c_curr
+			c_bits = d_curr
+			d_bits = a_curr
+			dest = "b_curr"
+
+		new_val = thirdRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift, ti_bits)
+		if dest == "a_curr":
+			a_curr = new_val
+		elif dest == "b_curr":
+			b_curr = new_val
+		elif dest == "c_curr":
+			c_curr = new_val
+		else:
+			d_curr = new_val
+
+		op_num += 1
+
+	# round 4
+	round_4_operations = [
+		(0, 6, 48),
+		(7, 10, 49),
+		(14, 15, 50),
+		(5, 21, 51),
+		(12, 6, 52),
+		(3, 10, 53),
+		(10, 15, 54),
+		(1, 21, 55),
+		(8, 6, 56),
+		(15, 10, 57),
+		(6, 15, 58),
+		(13, 21, 59),
+		(4, 6, 60),
+		(11, 10, 61),
+		(2, 15, 62),
+		(9, 21, 63),
+	]
+
+	op_num = 0
+	for op in round_4_operations:
+		a_bits = ""
+		b_bits = ""
+		c_bits = ""
+		d_bits = ""
+		xk_bits = x_words[op[0]]
+		shift = op[1]
+		ti_bits = t_const[op[2]]
+		dest = ""
+
+		if op_num in (0, 4, 8, 12):
+			a_bits = a_curr
+			b_bits = b_curr
+			c_bits = c_curr
+			d_bits = d_curr
+			dest = "a_curr"
+		elif op_num in (1, 5, 9, 13):
+			a_bits = d_curr
+			b_bits = a_curr
+			c_bits = b_curr
+			d_bits = c_curr
+			dest = "d_curr"
+		elif op_num in (2, 6, 10, 14):
+			a_bits = c_curr
+			b_bits = d_curr
+			c_bits = a_curr
+			d_bits = b_curr
+			dest = "c_curr"
+		else:
+			a_bits = b_curr
+			b_bits = c_curr
+			c_bits = d_curr
+			d_bits = a_curr
+			dest = "b_curr"
+
+		new_val = fourthRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift, ti_bits)
+		if dest == "a_curr":
+			a_curr = new_val
+		elif dest == "b_curr":
+			b_curr = new_val
+		elif dest == "c_curr":
+			c_curr = new_val
+		else:
+			d_curr = new_val
+
+		op_num += 1
+
+	# do block cleanup (increment registers)
+	a_init = modularAddition(a_init, a_curr)
+	b_init = modularAddition(b_init, b_curr)
+	c_init = modularAddition(c_init, c_curr)
+	d_init = modularAddition(d_init, d_curr)
+
+	# assemble and output message digest
+	digest = f"{a_init}{b_init}{c_init}{d_init}"
+	return digest
+
+
 
 ## messageLength(str) : str
 #
@@ -286,7 +589,7 @@ def modularAddition(bstr_x, bstr_y, bstr_z):
 	return bin_sum
 
 
-def bitshiftLeft(bit_string):
+def bitshiftLeft(bit_string, shift_amount):
 	pass
 
 
@@ -302,3 +605,14 @@ def hexToBinary(hex_string):
 def binaryToHex(bit_string):
 	hexv = hex(int(bit_string, 2))[2:]
 	return hexv
+
+
+def firstRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift_s, ti_bits):
+	fval = fFunction(b_bits, c_bits, d_bits)
+	msum = modularAddition(a_bits, fval)
+	msum = modularAddition(msum, xk_bits)
+	msum = modularAddition(msum, ti_bits)
+	vshift = bitshiftLeft(msum, shift_s)
+	aval = modularAddition(b_bits, vshift)
+	
+	return aval
