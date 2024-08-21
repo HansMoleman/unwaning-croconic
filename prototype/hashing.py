@@ -87,6 +87,10 @@ def saveHash(filepath, bitstring):
 def md5Hash(bitstr_in):
 	block_size = 512
 	lbits_size = 64
+	init_a = "00000001001000110100010101100111"
+	init_b = "10001001101010111100110111101111"
+	init_c = "11111110110111001011101010011000"
+	init_d = "01110110010101000011001000010000"
 
 	# pad to 512-bits, or break down into chunks of 512-bits
 	chunks = []
@@ -179,3 +183,38 @@ def messageLength(msg_bitstr):
 	size_bitstr += bsize
 
 	return size_bitstr
+
+
+def fFunction(bstr_b, bstr_c, bstr_d):
+	# F(b, c, d) = (b & C) | ((!b) & d)
+	b_and_c = ""
+	not_b_and_d = ""
+	b_and_c_or_not_b_and_d = ""
+
+
+def gFunction(bstr_b, bstr_c, bstr_d):
+	# G(b, c, d) = (b & d) | (c & (!d))
+	pass
+
+
+def hFunction(bstr_b, bstr_c, bstr_d):
+	# H(b, c, d) = (b ^ c ^ d)
+	pass
+
+def iFunction(bstr_b, bstr_c, bstr_d):
+	# I(b, c, d) = c ^ (b | (!d))
+	pass
+
+
+def modularAddition(bstr_x, bstr_y, bstr_z):
+	int_x = int(bstr_x, 2)
+	int_y = int(bstr_y, 2)
+	int_z = int(bstr_z, 2)
+
+	int_sum = (int_x + int_y) % int_z
+	bin_sum = bin(int_sum)[2:]
+
+	while(len(bin_sum) < 32):
+		bin_sum = "0" + bin_sum
+
+	return bin_sum
