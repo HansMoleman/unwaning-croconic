@@ -81,6 +81,7 @@ def bitOr(x_bits, y_bits):
 	return orv
 
 
+## WORKS
 def bitNot(x_bits):
 	# test_x:  '10001001101010111100110111101111'
 	# result:  '76543210'
@@ -95,5 +96,22 @@ def bitNot(x_bits):
 	return notv
 
 
+## WORKS
 def bitXOR(x_bits, y_bits):
-	pass
+	# test_x:  '11010101000001110001001101100111'
+	# test_y:  '11000000010110001010110111100010'
+	# result:  '155fbe85'
+	xorv = ""
+
+	if len(x_bits) == len(y_bits):
+		for i in range(len(x_bits)):
+			if x_bits[i] == y_bits[i]:
+				xorv += '0'
+			else:
+				xorv += '1'
+
+	else:
+		print("INTERNAL ERROR: bitXOR() requires x_bits and y_bits be the same size.")
+		exit(1)
+
+	return xorv
