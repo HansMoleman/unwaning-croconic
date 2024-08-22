@@ -192,7 +192,48 @@ def functionI(x_bits, y_bits, z_bits):
 
 
 def padMessage(message_bitstr):
-	pass
+	# test_bstr:  '01010100011010000110010101111001001000000110000101110010011001010010000001100100011001010111010001100101011100100110110101101001011011100110100101110011011101000110100101100011'
+	# result:     '01010100011010000110010101111001001000000110000101110010011001010010000001100100011001010111010001100101011100100110110101101001011011100110100101110011011101000110100101100011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010110000'
+	message_len = len(message_bitstr)
+	padded = ""
+
+	if message_len < 447:
+		padded = f"{message_bitstr}"
+		padded += '1'
+		while(len(padded) < 448):
+			padded += '0'
+		padded += getMessageLengthBits(message_bitstr)
+
+	elif 447 <= message_len and message_len < 512:
+		temp = ""
+		counter = 0
+		for i in range(message_len):
+			if counter == 447:
+				size_bits = getMessageLengthBits(temp)
+				temp += '1'
+				temp += size_bits
+				padded += temp
+
+				temp = ""
+				counter = 0
+			else:
+				temp += message_bitstr[i]
+				counter += 1
+
+		while 0 < counter and counter < 447:
+			temp += '0'
+			counter += 1
+
+		if temp != "":
+			size_temp = getMessageLengthBits(temp)
+			temp += '1'
+			temp += size_temp
+			padded += temp
+
+	else:
+		pass
+
+	return padded
 
 
 def toBlocks(padded_bitstr):
