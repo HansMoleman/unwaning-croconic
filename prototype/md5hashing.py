@@ -82,7 +82,17 @@ def bitOr(x_bits, y_bits):
 
 
 def bitNot(x_bits):
-	pass
+	# test_x:  '10001001101010111100110111101111'
+	# result:  '76543210'
+	notv = ""
+
+	for i in range(len(x_bits)):
+		if x_bits[i] == '0':
+			notv += '1'
+		else:
+			notv += '0'
+
+	return notv
 
 
 def bitXOR(x_bits, y_bits):
