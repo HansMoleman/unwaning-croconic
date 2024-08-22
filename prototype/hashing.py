@@ -209,7 +209,7 @@ def md5Hash(bitstr_in):
 			chunk += size_chunk
 			chunks.append(chunk)
 
-	print(chunks)
+	#print(chunks)
 	message_chunk = chunks[0]	# only worry about single chunk case for now
 	# bin of l=384 test string:
 	# '010101000110100001101001011100110010000001101001011100110010000001100001001000000111001101100001011011010111000001101100011001010010000001110011011101000111001001101001011011100110011100100000011001100110111101110010001000000111010001100101011100110111010001101001011011100110011100100000010011010100010000110101001000000110100001100001011100110110100001101001011011100110011100101110'
@@ -229,9 +229,9 @@ def md5Hash(bitstr_in):
 		counter += 1
 	message_words.append(word)
 	
-	print(f"num words:  {len(message_words)}")
-	for mword in message_words:
-		print(mword)
+	#print(f"num words:  {len(message_words)}")
+	#for mword in message_words:
+	#	print(mword)
 
 	#--#  conduct rounds on single block
 	i = 0
@@ -246,7 +246,7 @@ def md5Hash(bitstr_in):
 		x_words.append(message_words[(i * 16 + j)])
 
 	# round 1
-	round_1_ops = [
+	round_1_operations = [
 		('a', 'b', 'c', 'd', 0, 7, 0),
 		('d', 'a', 'b', 'c', 1, 12, 1),
 		('c', 'd', 'a', 'b', 2, 17, 2),
@@ -526,13 +526,13 @@ def md5Hash(bitstr_in):
 		op_num += 1
 
 	# do block cleanup (increment registers)
-	a_init = modularAddition(a_init, a_curr)
-	b_init = modularAddition(b_init, b_curr)
-	c_init = modularAddition(c_init, c_curr)
-	d_init = modularAddition(d_init, d_curr)
+	init_a = modularAddition(init_a, a_curr)
+	init_b = modularAddition(init_b, b_curr)
+	init_c = modularAddition(init_c, c_curr)
+	init_d = modularAddition(init_d, d_curr)
 
 	# assemble and output message digest
-	digest = f"{a_init}{b_init}{c_init}{d_init}"
+	digest = f"{init_a}{init_b}{init_c}{init_d}"
 	return digest
 
 
@@ -585,13 +585,14 @@ def hFunction(bstr_b, bstr_c, bstr_d):
 def iFunction(bstr_b, bstr_c, bstr_d):
 	# I(b, c, d) = c ^ (b | (!d))
 	not_d = bitNot(bstr_d)
-	b_or_not_d = bitOr(bstr_b)
+	b_or_not_d = bitOr(bstr_b, not_d)
 	i = bitXOR(bstr_c, b_or_not_d)
 	
 	return i
 
 
-def modularAddition(bstr_x, bstr_y, bstr_z):
+def modularAddition(bstr_x, bstr_y):
+	bstr_z = "100000000000000000000000000000000"
 	int_x = int(bstr_x, 2)
 	int_y = int(bstr_y, 2)
 	int_z = int(bstr_z, 2)
@@ -685,6 +686,36 @@ def binaryToHex(bit_string):
 
 def firstRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift_s, ti_bits):
 	fval = fFunction(b_bits, c_bits, d_bits)
+	msum = modularAddition(a_bits, fval)
+	msum = modularAddition(msum, xk_bits)
+	msum = modularAddition(msum, ti_bits)
+	vshift = bitshiftLeft(msum, shift_s)
+	aval = modularAddition(b_bits, vshift)
+	
+	return aval
+
+def secondRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift_s, ti_bits):
+	fval = gFunction(b_bits, c_bits, d_bits)
+	msum = modularAddition(a_bits, fval)
+	msum = modularAddition(msum, xk_bits)
+	msum = modularAddition(msum, ti_bits)
+	vshift = bitshiftLeft(msum, shift_s)
+	aval = modularAddition(b_bits, vshift)
+	
+	return aval
+
+def thirdRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift_s, ti_bits):
+	fval = hFunction(b_bits, c_bits, d_bits)
+	msum = modularAddition(a_bits, fval)
+	msum = modularAddition(msum, xk_bits)
+	msum = modularAddition(msum, ti_bits)
+	vshift = bitshiftLeft(msum, shift_s)
+	aval = modularAddition(b_bits, vshift)
+	
+	return aval
+
+def fourthRound(a_bits, b_bits, c_bits, d_bits, xk_bits, shift_s, ti_bits):
+	fval = iFunction(b_bits, c_bits, d_bits)
 	msum = modularAddition(a_bits, fval)
 	msum = modularAddition(msum, xk_bits)
 	msum = modularAddition(msum, ti_bits)
