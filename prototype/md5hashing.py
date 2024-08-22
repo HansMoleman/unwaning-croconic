@@ -157,5 +157,14 @@ def functionH(x_bits, y_bits, z_bits):
 	return h
 
 
+## WORKS
 def functionI(x_bits, y_bits, z_bits):
-	pass
+	# test_x:  '01111101010100000010000001100011'
+	# test_y:  '10001011001111010111000101011101'
+	# test_z:  '00011101111000111010011100111001'
+	# result:  'f46109ba'
+	nz = bitNot(z_bits)
+	xvnz = bitOr(x_bits, nz)
+	i = bitXOR(y_bits, xvnz)
+
+	return i
