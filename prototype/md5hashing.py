@@ -188,3 +188,16 @@ def functionI(x_bits, y_bits, z_bits):
 	i = bitXOR(y_bits, xvnz)
 
 	return i
+
+
+
+def padMessage(message_bitstr):
+	pass
+
+
+def toBlocks(padded_bitstr):
+	pass
+
+
+def toWords(block_bitstr):
+	pass
