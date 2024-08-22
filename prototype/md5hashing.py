@@ -118,6 +118,26 @@ def bitXOR(x_bits, y_bits):
 
 
 ## WORKS
+def bitShiftLeft(bit_str, shift_amount):
+	# test_bits:  '00101011110100110000100111110000'
+	# test_amnt:   7
+	# result:     'e984f815'
+	register = []
+	for i in range(len(bit_str)):
+		register.append(bit_str[i])
+
+	for i in range(shift_amount):
+		bit = register.pop(0)
+		register.append(bit)
+
+	shift_str = ""
+	for i in range(len(register)):
+		shift_str += register[i]
+
+	return shift_str
+
+
+## WORKS
 def functionF(x_bits, y_bits, z_bits):
 	# test_x:  '10001001101010111100110111101111'
 	# test_y:  '11111110110111001011101010011000'
