@@ -145,8 +145,16 @@ def functionG(x_bits, y_bits, z_bits):
 	return g
 
 
+## WORKS
 def functionH(x_bits, y_bits, z_bits):
-	pass
+	# test_x:  '11010101000001110001001101100111'
+	# test_y:  '11000000010110001010110111100010'
+	# test_z:  '01100011110001100000001111010111'
+	# result:  '7699bd52'
+	x_xor_y = bitXOR(x_bits, y_bits)
+	h = bitXOR(x_xor_y, z_bits)
+
+	return h
 
 
 def functionI(x_bits, y_bits, z_bits):
