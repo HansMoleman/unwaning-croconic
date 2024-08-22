@@ -2,7 +2,7 @@
 ### md5hashing.py
 #
 #
-#
+# August 22, 2024
 ##
 
 # test str: 'They are deterministic'
@@ -255,5 +255,19 @@ def toBlocks(padded_bitstr):
 	return blocks
 
 
+## WORKS
 def toWords(block_bitstr):
-	pass
+	words = []
+
+	word = ""
+	count = 0
+	for i in range(len(block_bitstr)):
+		word += block_bitstr[i]
+		count += 1
+
+		if count == 32:
+			words.append(word)
+			word = ""
+			count = 0
+
+	return words
