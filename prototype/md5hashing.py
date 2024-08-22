@@ -131,8 +131,18 @@ def functionF(x_bits, y_bits, z_bits):
 	return f
 
 
+## ??
 def functionG(x_bits, y_bits, z_bits):
-	pass
+	# test_x:  '00101100001101001101111110100010'
+	# test_y:  '11011110000101100111001110111110'
+	# test_z:  '01001011100101110110001010000010'
+	# result:  '1c1453be'
+	xz = bitAnd(x_bits, z_bits)
+	nz = bitNot(z_bits)
+	ynz = bitAnd(y_bits, nz)
+	g = bitOr(xz, ynz)
+
+	return g
 
 
 def functionH(x_bits, y_bits, z_bits):
