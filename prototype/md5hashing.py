@@ -115,3 +115,29 @@ def bitXOR(x_bits, y_bits):
 		exit(1)
 
 	return xorv
+
+
+## WORKS
+def functionF(x_bits, y_bits, z_bits):
+	# test_x:  '10001001101010111100110111101111'
+	# test_y:  '11111110110111001011101010011000'
+	# test_z:  '01110110010101000011001000010000'
+	# result:  'fedcba98'
+	xy = bitAnd(x_bits, y_bits)
+	nx = bitNot(x_bits)
+	nxz = bitAnd(nx, z_bits)
+	f = bitOr(xy, nxz)
+
+	return f
+
+
+def functionG(x_bits, y_bits, z_bits):
+	pass
+
+
+def functionH(x_bits, y_bits, z_bits):
+	pass
+
+
+def functionI(x_bits, y_bits, z_bits):
+	pass
