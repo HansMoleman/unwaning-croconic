@@ -43,7 +43,21 @@ def modularAddition(x_bits, y_bits):
 
 
 def bitAnd(x_bits, y_bits):
-	pass
+	# test_x:  '10001001101010111100110111101111'
+	# test_y:  '11111110110111001011101010011000'
+	andv = ""
+
+	if len(x_bits) != len(y_bits):
+		print("INTERNAL ERROR: bitAnd() requires the length of x_bits and the length of y_bits be equal.")
+		exit(1)
+	else:
+		for i in range(len(x_bits)):
+			if (x_bits[i] == '1') and (y_bits[i] == '1'):
+				andv += '1'
+			else:
+				andv += '0'
+
+	return andv
 
 
 def bitOr(x_bits, y_bits):
