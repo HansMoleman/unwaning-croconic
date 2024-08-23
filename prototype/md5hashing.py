@@ -357,7 +357,9 @@ def md5Hash(message_bitstr):
 	]
 
 	# pad message and break into blocks
-	padded_msg = padMessage(message_bitstr)
+	little_endian = reverseBits(message_bitstr)
+	padded_msg = padMessage(little_endian)
+	#padded_msg = padMessage(message_bitstr)
 	blocks = toBlocks(padded_msg)
 
 	for block in blocks:
@@ -382,9 +384,11 @@ def md5Hash(message_bitstr):
 				f_bits = functionH(b, c, d)
 				g = ((3 * i) + 5) % 16
 
-			elif 48 <= i:
+			elif (48 <= i) and (i < 64):
 				f_bits = functionI(b, c, d)
 				g = (7 * i) % 16
+			else:
+				print("...error...?")
 
 			f_bits = modularAddition(a, f_bits)
 			f_bits = modularAddition(f_bits, m_array[g])
@@ -401,8 +405,8 @@ def md5Hash(message_bitstr):
 		c0 = modularAddition(c0, c)
 		d0 = modularAddition(d0, d)
 
-	#digest = f"{a0}{b0}{c0}{d0}"
-	digest = buildDigest(a0, b0, c0, d0)
+	digest = f"{a0}{b0}{c0}{d0}"
+	#digest = buildDigest(a0, b0, c0, d0)
 	return digest
 
 
@@ -416,8 +420,10 @@ def buildDigest(a, b, c, d):
 	return digest
 
 
+## WORKS
 def reverseBits(bitstr):
 	as_bytes = []
+	rv_bytes = []
 
 	count = 0
 	curr_byte = ""
@@ -430,15 +436,12 @@ def reverseBits(bitstr):
 			curr_byte = ""
 			count = 0
 
-	rev_bytes = []
-	for str_byte in as_bytes:
-		rev_byte = ""
-		for i in range(len(str_byte) - 1, -1, -1):
-			rev_byte += str_byte[i]
-		rev_bytes.append(rev_byte)
+	nbytes = len(as_bytes)
+	for i in range(nbytes):
+		rv_bytes.append(as_bytes.pop())
 
-	rev_bitstr = ""
-	for rbyte in rev_bytes:
-		rev_bitstr += rbyte
+	rev_str = ""
+	for rvbyte in rv_bytes:
+		rev_str += rvbyte
 
-	return rev_bitstr
+	return rev_str
