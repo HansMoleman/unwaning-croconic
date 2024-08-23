@@ -382,25 +382,63 @@ def md5Hash(message_bitstr):
 				f_bits = functionH(b, c, d)
 				g = ((3 * i) + 5) % 16
 
-			else:
+			elif 48 <= i:
 				f_bits = functionI(b, c, d)
 				g = (7 * i) % 16
 
-			fsum = modularAddition(f_bits, a)
-			fsum = modularAddition(fsum, t_array[i])
-			fsum = modularAddition(fsum, m_array[g])
-			f_bits = fsum
+			f_bits = modularAddition(a, f_bits)
+			f_bits = modularAddition(f_bits, m_array[g])
+			f_bits = modularAddition(f_bits, t_array[i])
+			f_bits = bitShiftLeft(f_bits, s_array[i])
 
-			rotation = bitShiftLeft(f_bits, s_array[i])
 			a = d
 			d = c
 			c = b
-			b = modularAddition(b, rotation)
+			b = modularAddition(b, f_bits)
 
 		a0 = modularAddition(a0, a)
 		b0 = modularAddition(b0, b)
 		c0 = modularAddition(c0, c)
 		d0 = modularAddition(d0, d)
 
-	digest = f"{a0}{b0}{c0}{d0}"
+	#digest = f"{a0}{b0}{c0}{d0}"
+	digest = buildDigest(a0, b0, c0, d0)
 	return digest
+
+
+def buildDigest(a, b, c, d):
+	a_rev = reverseBits(a)
+	b_rev = reverseBits(b)
+	c_rev = reverseBits(c)
+	d_rev = reverseBits(d)
+
+	digest = f"{a_rev}{b_rev}{c_rev}{d_rev}"
+	return digest
+
+
+def reverseBits(bitstr):
+	as_bytes = []
+
+	count = 0
+	curr_byte = ""
+	for i in range(len(bitstr)):
+		curr_byte += bitstr[i]
+		count += 1
+
+		if count == 8:
+			as_bytes.append(curr_byte)
+			curr_byte = ""
+			count = 0
+
+	rev_bytes = []
+	for str_byte in as_bytes:
+		rev_byte = ""
+		for i in range(len(str_byte) - 1, -1, -1):
+			rev_byte += str_byte[i]
+		rev_bytes.append(rev_byte)
+
+	rev_bitstr = ""
+	for rbyte in rev_bytes:
+		rev_bitstr += rbyte
+
+	return rev_bitstr
