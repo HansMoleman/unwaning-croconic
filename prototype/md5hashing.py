@@ -1,6 +1,9 @@
 
 ### md5hashing.py
 #
+# Refs:
+#	(1)	https://datatracker.ietf.org/doc/html/rfc1321
+#	(2)	https://en.wikipedia.org/wiki/MD5#Pseudocode
 #
 # August 22, 2024
 ##
@@ -195,12 +198,14 @@ def functionI(x_bits, y_bits, z_bits):
 def padMessage(message_bitstr):
 	# test_bstr:  '01010100011010000110010101111001001000000110000101110010011001010010000001100100011001010111010001100101011100100110110101101001011011100110100101110011011101000110100101100011'
 	# result:     '01010100011010000110010101111001001000000110000101110010011001010010000001100100011001010111010001100101011100100110110101101001011011100110100101110011011101000110100101100011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010110000'
-	message_len = len(message_bitstr)
+	
+	#message_len = len(message_bitstr)
 	padded = f"{message_bitstr}1"
 
 	if len(padded) < 448:
 		while(len(padded) < 448):
 			padded += '0'
+		#padded += getMessageLengthBits(message_bitstr)
 		padded += reverseAsWords(getMessageLengthBits(message_bitstr))
 
 	'''
@@ -405,20 +410,24 @@ def md5Hash(message_bitstr):
 		c0 = modularAddition(c0, c)
 		d0 = modularAddition(d0, d)
 
-	digest = f"{a0}{b0}{c0}{d0}"
+	#digest = f"{a0}{b0}{c0}{d0}"
 	#print(a0)
 	#print(b0)
 	#print(c0)
 	#print(d0)
-	#digest = buildDigest(a0, b0, c0, d0)
+	digest = buildDigest(a0, b0, c0, d0)
 	return digest
 
 
 def buildDigest(a, b, c, d):
-	a_rev = reverseBits(a)
-	b_rev = reverseBits(b)
-	c_rev = reverseBits(c)
-	d_rev = reverseBits(d)
+	#a_rev = reverseBits(a)
+	#b_rev = reverseBits(b)
+	#c_rev = reverseBits(c)
+	#d_rev = reverseBits(d)
+	a_rev = reverseAsWords(a)
+	b_rev = reverseAsWords(b)
+	c_rev = reverseAsWords(c)
+	d_rev = reverseAsWords(d)
 
 	digest = f"{a_rev}{b_rev}{c_rev}{d_rev}"
 	return digest
