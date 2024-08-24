@@ -196,15 +196,14 @@ def padMessage(message_bitstr):
 	# test_bstr:  '01010100011010000110010101111001001000000110000101110010011001010010000001100100011001010111010001100101011100100110110101101001011011100110100101110011011101000110100101100011'
 	# result:     '01010100011010000110010101111001001000000110000101110010011001010010000001100100011001010111010001100101011100100110110101101001011011100110100101110011011101000110100101100011100000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000010110000'
 	message_len = len(message_bitstr)
-	padded = ""
+	padded = f"{message_bitstr}1"
 
-	if message_len < 447:
-		padded = f"{message_bitstr}"
-		padded += '1'
+	if len(padded) < 448:
 		while(len(padded) < 448):
 			padded += '0'
-		padded += getMessageLengthBits(message_bitstr)
+		padded += reverseAsWords(getMessageLengthBits(message_bitstr))
 
+	'''
 	elif 447 <= message_len and message_len < 512:
 		temp = ""
 		counter = 0
@@ -233,6 +232,7 @@ def padMessage(message_bitstr):
 
 	else:
 		pass
+	'''
 
 	return padded
 
@@ -357,9 +357,9 @@ def md5Hash(message_bitstr):
 	]
 
 	# pad message and break into blocks
-	little_endian = reverseBits(message_bitstr)
-	padded_msg = padMessage(little_endian)
-	#padded_msg = padMessage(message_bitstr)
+	#little_endian = reverseBits(message_bitstr)
+	#padded_msg = padMessage(little_endian)
+	padded_msg = padMessage(message_bitstr)
 	blocks = toBlocks(padded_msg)
 
 	for block in blocks:
@@ -406,6 +406,10 @@ def md5Hash(message_bitstr):
 		d0 = modularAddition(d0, d)
 
 	digest = f"{a0}{b0}{c0}{d0}"
+	#print(a0)
+	#print(b0)
+	#print(c0)
+	#print(d0)
 	#digest = buildDigest(a0, b0, c0, d0)
 	return digest
 
@@ -445,3 +449,31 @@ def reverseBits(bitstr):
 		rev_str += rvbyte
 
 	return rev_str
+
+
+def reverseAsWords(bitstr):
+	chunks = []
+
+	count = 0
+	chunk = ""
+	for i in range(len(bitstr)):
+		chunk += bitstr[i]
+		count += 1
+
+		if count == 32:
+			chunks.append(chunk)
+			chunk = ""
+			count = 0
+
+	rev_chunks = []
+	for chunk in chunks:
+		rv_chunk = ""
+		for i in range(len(chunk) - 1, -1, -1):
+			rv_chunk += chunk[i]
+		rev_chunks.append(rv_chunk)
+
+	rv_words = ""
+	for rvchunk in rev_chunks:
+		rv_words += rvchunk
+
+	return rv_words
