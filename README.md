@@ -1,6 +1,6 @@
 # Cryptography Utility<br>(codename "Unwaning Croconic")
 **Created:**&nbsp;&nbsp; August 13<sup>th</sup>, 2024  
-**Updated:**&nbsp; 08-20-2024 @ 6:05 PM
+**Updated:**&nbsp; 10-21-2024 @ 8:29 PM
 
 ---
 
@@ -100,12 +100,12 @@ The following section outlines all information regarding development...
 
 The following outlines what's currently being worked on and expected to roll out soon:
 
-1. MD5 Hashing
-	* ability to hash plain-text strings using the MD5 algorithm
+1. SHA Hashing
+	* ability to hash plain-text strings using the SHA-256(?) algorithm
 	* ...
 
-2. SHA Hashing
-	* ability to hash plain-text strings using the SHA-256(?) algorithm
+2. RIPEMD-160 Hashing
+	* ability to hash plain-text strings using the RIPEMD-160 algorithm
 	* ...
 
 3. Upgrades to XOR Hashing
@@ -125,6 +125,7 @@ The following outlines what is planned to be developed, but is not currently bei
 4. Blowfish Encryption
 5. Twofish Encryption
 6. Refactor System (to use bit operations anywhere applicable)
+7. Revisit MD5 Hashing
 
 
 <br>
